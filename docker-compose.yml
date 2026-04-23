@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_vet
+    environment:
+      POSTGRES_DB: clinica_vet
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backend/schema_corte3.sql:/docker-entrypoint-initdb.d/00_schema.sql
+      - ./backend/01_procedures.sql:/docker-entrypoint-initdb.d/01_procedures.sql
+      - ./backend/02_triggers.sql:/docker-entrypoint-initdb.d/02_triggers.sql
+      - ./backend/03_views.sql:/docker-entrypoint-initdb.d/03_views.sql
+      - ./backend/04_roles_y_permisos.sql:/docker-entrypoint-initdb.d/04_roles_y_permisos.sql
+      - ./backend/05_rls.sql:/docker-entrypoint-initdb.d/05_rls.sql
+    networks:
+      - vet-network
+
+  redis:
+    image: redis/redis-stack:latest # Versión con visualizador si lo necesitas
+    container_name: redis_vet
+    ports:
+      - "6379:6379"
+    networks:
+      - vet-network
+
+  api:
+    build: ./api
+    container_name: api_vet
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+    networks:
+      - vet-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_vet
+    ports:
+      - "8080:80"
+    networks:
+      - vet-network
+
+networks:
+  vet-network:
+    driver: bridge

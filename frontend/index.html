@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetAdmin | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>VetAdmin</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <div id="user-info-badge"></div>
+            <hr>
+            <p class="nav-label">Módulos</p>
+            <ul>
+                <li><a href="#" onclick="showSection('search-section')">Mascotas</a></li>
+                <li><a href="#" onclick="showSection('cache-section')">Vacunación</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <h1 id="section-title">Panel de Control</h1>
+            <div id="login-section">
+                <select id="role-select">
+                    <option value="admin">Administrador</option>
+                    <option value="recepcion">Recepción</option>
+                    <option value="vet_1">Dr. López (ID 1)</option>
+                    <option value="vet_2">Dra. García (ID 2)</option>
+                </select>
+                <button class="btn-primary" onclick="login()">Acceder</button>
+            </div>
+        </header>
+
+        <section id="app-content" style="display:none;">
+            <div id="search-section" class="content-card">
+                <div class="card-header">
+                    <h2>Búsqueda de Mascotas</h2>
+                    <span class="badge">Protección SQLi activa</span>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Nombre de la mascota (ej. Firulais)...">
+                    <button class="btn-teal" onclick="buscarMascota()">Buscar</button>
+                </div>
+                <div id="search-results" class="results-grid"></div>
+            </div>
+
+            <div id="cache-section" class="content-card" style="display:none;">
+                <div class="card-header">
+                    <h2>Vacunación Pendiente</h2>
+                    <div id="cache-indicator" class="cache-info">Esperando consulta...</div>
+                </div>
+                <button class="btn-outline" onclick="cargarVacunasPendientes()">Actualizar Listado</button>
+                <div class="table-container">
+                    <table id="vacunas-table">
+                        <thead>
+                            <tr>
+                                <th>Mascota</th>
+                                <th>Vacuna</th>
+                                <th>Dueño</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vacunas-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Función simple para cambiar entre vistas en el dashboard
+        function showSection(sectionId) {
+            document.getElementById('search-section').style.display = 'none';
+            document.getElementById('cache-section').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+            document.getElementById('section-title').innerText = 
+                sectionId === 'search-section' ? 'Gestión de Mascotas' : 'Control de Vacunas';
+        }
+    </script>
+</body>
+</html>
